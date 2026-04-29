@@ -1,0 +1,108 @@
+# 巽風堪輿研究中心｜Decap CMS 後台設定
+# 啟用前請先建立 GitHub Repository，然後把 repo 改成你的 GitHub 帳號/儲存庫名稱。
+# 例：repo: fengyi-teacher/xunfeng-official
+
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/xunfeng-official
+  branch: main
+
+# 本機測試可使用 decap-server；正式上線時不用。
+local_backend: true
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+locale: "zh_Hant"
+publish_mode: editorial_workflow
+
+collections:
+  - name: "settings"
+    label: "網站設定"
+    files:
+      - name: "site"
+        label: "網站基本設定"
+        file: "content/site.json"
+        format: "json"
+        fields:
+          - { label: "品牌名稱", name: "brand", widget: "string" }
+          - { label: "短品牌名稱", name: "shortBrand", widget: "string" }
+          - { label: "英文副標", name: "subBrand", widget: "string", required: false }
+          - { label: "首頁主標題", name: "heroTitle", widget: "string" }
+          - { label: "首頁強調句", name: "heroAccent", widget: "string" }
+          - { label: "首頁說明文字", name: "heroLead", widget: "text" }
+          - { label: "品牌母圖", name: "brandAnchorImage", widget: "image" }
+          - { label: "風羿老師形象照", name: "fengyiImage", widget: "image" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "LINE 官方帳號", name: "lineUrl", widget: "string" }
+          - { label: "Facebook 粉專", name: "facebookUrl", widget: "string" }
+          - { label: "AI 分身連結", name: "aiUrl", widget: "string" }
+          - { label: "Formspree Endpoint", name: "formspreeEndpoint", widget: "string" }
+          - { label: "主 CTA 文字", name: "mainCta", widget: "string" }
+          - { label: "副 CTA 文字", name: "secondaryCta", widget: "string" }
+          - { label: "SEO 標題", name: "seoTitle", widget: "string" }
+          - { label: "SEO 描述", name: "seoDescription", widget: "text" }
+          - { label: "SEO 關鍵字", name: "seoKeywords", widget: "text" }
+
+  - name: "content_data"
+    label: "內容資料"
+    files:
+      - name: "services"
+        label: "服務價格"
+        file: "content/services.json"
+        format: "json"
+        fields:
+          - label: "服務列表"
+            name: "services"
+            widget: "list"
+            summary: "{{fields.title}}｜{{fields.price}}"
+            fields:
+              - { label: "服務名稱", name: "title", widget: "string" }
+              - { label: "分類", name: "category", widget: "string" }
+              - { label: "價格", name: "price", widget: "string" }
+              - { label: "備註", name: "note", widget: "text", required: false }
+              - { label: "服務說明", name: "description", widget: "text" }
+
+      - name: "cases"
+        label: "案例實績"
+        file: "content/cases.json"
+        format: "json"
+        fields:
+          - label: "案例列表"
+            name: "cases"
+            widget: "list"
+            summary: "{{fields.category}}｜{{fields.title}}"
+            fields:
+              - { label: "案例分類", name: "category", widget: "string" }
+              - { label: "案例標題", name: "title", widget: "string" }
+              - { label: "摘要", name: "summary", widget: "text" }
+              - { label: "內文", name: "body", widget: "text" }
+              - { label: "案例照片", name: "image", widget: "image", required: false }
+
+      - name: "courses"
+        label: "課程講座"
+        file: "content/courses.json"
+        format: "json"
+        fields:
+          - label: "課程列表"
+            name: "courses"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "課程標題", name: "title", widget: "string" }
+              - { label: "適合對象", name: "audience", widget: "string" }
+              - { label: "課程說明", name: "description", widget: "text" }
+              - { label: "課程照片", name: "image", widget: "image", required: false }
+
+      - name: "photos"
+        label: "服務照片輪播"
+        file: "content/photos.json"
+        format: "json"
+        fields:
+          - label: "照片列表"
+            name: "photos"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "照片標題", name: "title", widget: "string" }
+              - { label: "照片說明", name: "caption", widget: "text" }
+              - { label: "圖片", name: "image", widget: "image" }
