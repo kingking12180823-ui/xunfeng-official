@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects
+/首頁 /index.html 301
+/預約 /booking.html 301
+/企業顧問 /enterprise.html 301
+/服務方案 /services.html 301

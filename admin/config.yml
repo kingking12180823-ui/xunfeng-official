@@ -4,7 +4,7 @@
 
 backend:
   name: github
-  repo: kingking12180823-ui/xunfeng-official
+  repo: YOUR_GITHUB_USERNAME/xunfeng-official
   branch: main
 
 # 本機測試可使用 decap-server；正式上線時不用。

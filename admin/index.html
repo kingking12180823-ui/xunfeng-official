@@ -2,14 +2,75 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>巽風官網後台｜內容管理</title>
-  <style>
-    body { font-family: "Microsoft JhengHei", system-ui, sans-serif; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>巽風官網後台｜GitHub 直改版</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Decap CMS 後台 -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark">巽</div>
+        <div>
+          <h1>巽風官網後台</h1>
+          <p>GitHub 直改版</p>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <label>GitHub Repo
+          <input id="repo" value="kingking12180823-ui/xunfeng-official" />
+        </label>
+        <label>Branch
+          <input id="branch" value="main" />
+        </label>
+        <label>GitHub Token
+          <input id="token" type="password" placeholder="貼上 fine-grained token" />
+        </label>
+        <button id="connectBtn">連線讀取內容</button>
+        <button id="forgetBtn" class="ghost">清除本機 Token</button>
+        <p class="hint">Token 只存於此瀏覽器，不會寫進網站檔案。建議使用 Fine-grained token，僅授權此 repo 的 Contents 讀寫。</p>
+      </div>
+
+      <nav class="tabs">
+        <button data-tab="site" class="active">網站設定</button>
+        <button data-tab="services">服務價格</button>
+        <button data-tab="cases">案例實績</button>
+        <button data-tab="courses">課程講座</button>
+        <button data-tab="photos">照片輪播</button>
+      </nav>
+
+      <div class="status" id="status">尚未連線</div>
+    </aside>
+
+    <main class="main">
+      <div class="top">
+        <div>
+          <h2 id="pageTitle">網站設定</h2>
+          <p>修改後按「發布本頁」，系統會直接 commit 到 GitHub，Cloudflare Pages 會自動重新部署。</p>
+        </div>
+        <div class="actions">
+          <button id="reloadBtn" class="ghost">重新讀取</button>
+          <button id="saveBtn">發布本頁</button>
+        </div>
+      </div>
+
+      <section id="editor" class="editor">
+        <div class="empty">
+          <h3>先連線 GitHub</h3>
+          <p>貼上 GitHub token 後，按「連線讀取內容」。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="fieldTemplate">
+    <label class="field">
+      <span></span>
+      <input />
+    </label>
+  </template>
+
+  <script src="app.js"></script>
 </body>
 </html>

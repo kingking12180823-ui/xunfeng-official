@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 正式上線後，請把 https://your-domain.com 換成你的正式網域 -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://your-domain.com/</loc></url>
+  <url><loc>https://your-domain.com/about.html</loc></url>
+  <url><loc>https://your-domain.com/services.html</loc></url>
+  <url><loc>https://your-domain.com/enterprise.html</loc></url>
+  <url><loc>https://your-domain.com/cases.html</loc></url>
+  <url><loc>https://your-domain.com/courses.html</loc></url>
+  <url><loc>https://your-domain.com/booking.html</loc></url>
+</urlset>
