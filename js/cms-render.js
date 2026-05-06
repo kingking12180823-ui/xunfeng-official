@@ -236,3 +236,49 @@
     setTimeout(setupCarousel, 100);
   });
 })();
+
+
+// Case track mobile drag fallback: makes cases swipe reliably inside mobile browsers / Facebook in-app browser.
+(function () {
+  function enableCaseSwipe() {
+    const track = document.querySelector(".case-track");
+    if (!track || track.dataset.swipeReady === "1") return;
+    track.dataset.swipeReady = "1";
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let moved = false;
+
+    track.addEventListener("pointerdown", (e) => {
+      isDown = true;
+      moved = false;
+      startX = e.clientX;
+      scrollLeft = track.scrollLeft;
+      track.setPointerCapture?.(e.pointerId);
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      track.scrollLeft = scrollLeft - dx;
+    });
+
+    function end(e) {
+      if (!isDown) return;
+      isDown = false;
+      track.releasePointerCapture?.(e.pointerId);
+    }
+
+    track.addEventListener("pointerup", end);
+    track.addEventListener("pointercancel", end);
+    track.addEventListener("mouseleave", end);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(enableCaseSwipe, 300));
+  } else {
+    setTimeout(enableCaseSwipe, 300);
+  }
+})();

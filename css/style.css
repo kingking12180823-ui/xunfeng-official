@@ -503,3 +503,79 @@ h3 { font-size: 24px; }
   .floating-ai { display: none; }
   .mobile-dock { display: grid; }
 }
+
+
+/* === Mobile case carousel swipe fix === */
+.case-track {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  padding: 8px 0 26px;
+}
+
+.case-track::-webkit-scrollbar {
+  height: 8px;
+}
+
+.case-track::-webkit-scrollbar-thumb {
+  background: rgba(110, 231, 183, .38);
+  border-radius: 999px;
+}
+
+.case-card {
+  flex: 0 0 min(86vw, 560px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.case-card img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (max-width: 768px) {
+  .case-track {
+    gap: 16px;
+    padding-left: 0;
+    padding-right: 22vw;
+    margin-right: -22px;
+  }
+
+  .case-card {
+    flex-basis: 86vw;
+    min-width: 86vw;
+  }
+
+  .case-card h3 {
+    font-size: clamp(30px, 9vw, 44px);
+    line-height: 1.18;
+    word-break: keep-all;
+  }
+
+  .case-card p {
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .case-tag {
+    width: max-content;
+  }
+}
+
+@media (max-width: 420px) {
+  .case-card {
+    flex-basis: 88vw;
+    min-width: 88vw;
+  }
+
+  .case-track {
+    padding-right: 26vw;
+  }
+}
