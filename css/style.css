@@ -966,3 +966,111 @@ h3 { font-size: 24px; }
   padding: 0 !important;
   margin: 0 !important;
 }
+
+
+/* === V5 global heading system: controlled line breaks, no broken Chinese title fragments === */
+h1, h2, h3 {
+  word-break: keep-all;
+  overflow-wrap: normal;
+  line-break: strict;
+}
+
+.hero-title,
+.section-title {
+  display: grid;
+  gap: .08em;
+  margin: 0 0 24px;
+  line-height: .98;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+
+.hero-title {
+  font-size: clamp(42px, 5.45vw, 72px);
+}
+
+.section-title {
+  font-size: clamp(32px, 4vw, 54px);
+}
+
+.hero-title .title-line,
+.section-title .title-line {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.hero-title .title-main,
+.section-title .title-main {
+  color: var(--text);
+}
+
+.hero-title .accent,
+.section-title .accent {
+  color: var(--green);
+  display: block;
+}
+
+.brand-anchor .hero-title {
+  max-width: 650px;
+}
+
+.section-head .hero-title,
+.section-head .section-title {
+  margin-bottom: 0;
+}
+
+.course-promo-copy .promo-title {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.course-promo-copy .promo-title span,
+.course-promo-copy .promo-title small {
+  white-space: nowrap;
+}
+
+/* Remove punctuation-as-line-break habit from visual title blocks */
+.hero-title .title-line::first-letter,
+.section-title .title-line::first-letter {
+  letter-spacing: inherit;
+}
+
+@media (max-width: 900px) {
+  .section-head .hero-title,
+  .section-head .section-title {
+    margin-bottom: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: clamp(36px, 10.6vw, 58px);
+    gap: .1em;
+  }
+
+  .section-title {
+    font-size: clamp(30px, 9vw, 46px);
+    gap: .08em;
+  }
+
+  .hero-title .title-line,
+  .section-title .title-line {
+    white-space: nowrap;
+  }
+
+  .brand-anchor .hero-title {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 34px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+}

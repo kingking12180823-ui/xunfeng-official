@@ -335,7 +335,6 @@ ${videos.length ? `
       setText("[data-site='shortBrand']", site.shortBrand);
       setText("[data-site='subBrand']", site.subBrand);
       setText("[data-site='heroTitle']", site.heroTitle);
-      setText("[data-site='heroAccent']", site.heroAccent);
       setText("[data-site='heroLead']", site.heroLead);
       setText("[data-site='email']", site.email);
       setHref("[data-link='line']", site.lineUrl);
@@ -416,4 +415,26 @@ ${videos.length ? `
     setTimeout(removeLegacyCourseGallery, 500);
   }
   setTimeout(removeLegacyCourseGallery, 1500);
+})();
+
+
+// V5: lock hero/section title line breaks to avoid browser cutting Chinese copy into broken fragments.
+(function(){
+  function normalizeControlledTitles(){
+    document.querySelectorAll(".hero-title, .section-title").forEach(function(title){
+      title.querySelectorAll(".title-line").forEach(function(line){
+        line.textContent = String(line.textContent || "")
+          .replace(/[，。；、]+$/g, "")
+          .replace(/[，。；、]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      });
+    });
+  }
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", normalizeControlledTitles);
+  } else {
+    normalizeControlledTitles();
+  }
+  setTimeout(normalizeControlledTitles, 800);
 })();
