@@ -1074,3 +1074,403 @@ h1, h2, h3 {
     font-size: 28px;
   }
 }
+
+
+/* === V8 mobile responsive system fix: prevent clipping across all public pages === */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+*,
+*::before,
+*::after {
+  min-width: 0;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+.wrap,
+.nav,
+.hero-grid,
+.brand-anchor,
+.section-head,
+.grid-2,
+.grid-3,
+.grid-4,
+.grid-5,
+.card,
+.panel,
+.price-card,
+.case-card,
+.photo-card,
+.form-panel,
+.course-promo-card,
+.course-promo-copy,
+.course-promo-media {
+  min-width: 0;
+}
+
+.nav-links {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-title,
+.section-title,
+.course-promo-copy .promo-title {
+  max-width: 100%;
+}
+
+.course-promo-copy h3,
+.promo-body,
+.promo-body p,
+.card p,
+.panel p,
+.case-card h3,
+.photo-caption strong,
+.price-card h3 {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    width: calc(100% - 32px);
+    max-width: none;
+  }
+
+  .topbar {
+    overflow-x: hidden;
+  }
+
+  .nav {
+    width: 100%;
+    min-height: auto;
+    padding: 14px 0 10px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .brand-mark {
+    flex: 0 0 auto;
+  }
+
+  .brand-title {
+    font-size: 22px;
+    letter-spacing: .10em;
+  }
+
+  .nav-links {
+    order: 3;
+    width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+    display: flex;
+    gap: 28px;
+    overflow-x: auto;
+    padding: 10px 0 8px;
+    font-size: 17px;
+    white-space: nowrap;
+  }
+
+  .nav-links a {
+    flex: 0 0 auto;
+  }
+
+  section {
+    padding: 54px 0;
+  }
+
+  .hero {
+    padding: 42px 0 54px;
+  }
+
+  .hero-grid,
+  .brand-anchor,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .grid-5,
+  .footer-grid,
+  .form-grid,
+  .promo-video-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .brand-anchor,
+  .card,
+  .panel,
+  .form-panel,
+  .price-card {
+    width: 100%;
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .hero-title,
+  .section-title {
+    width: 100%;
+    max-width: 100%;
+    gap: .11em;
+    letter-spacing: -.045em;
+  }
+
+  .hero-title {
+    font-size: clamp(34px, 9.2vw, 48px);
+    line-height: 1.04;
+  }
+
+  .section-title {
+    font-size: clamp(30px, 8.6vw, 44px);
+    line-height: 1.06;
+  }
+
+  .hero-title .title-line,
+  .section-title .title-line {
+    width: auto;
+    max-width: 100%;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  .section-head {
+    display: block;
+    margin-bottom: 28px;
+  }
+
+  .section-desc,
+  .lead {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    line-height: 1.86;
+  }
+
+  .price-range {
+    font-size: clamp(28px, 8.5vw, 38px);
+    overflow-wrap: anywhere;
+  }
+
+  .photo-track,
+  .case-track {
+    width: 100%;
+    max-width: 100%;
+    margin-right: 0;
+    padding-right: 18vw;
+  }
+
+  .photo-card,
+  .case-card {
+    flex-basis: min(86vw, 520px);
+    min-width: min(86vw, 520px);
+  }
+}
+
+/* Course page / 掌中訣 mobile-specific correction */
+@media (max-width: 768px) {
+  .course-promo-section {
+    padding: 28px 0 24px;
+    overflow-x: hidden;
+  }
+
+  .course-promo-card {
+    width: 100%;
+    max-width: 100%;
+    display: flex !important;
+    flex-direction: column;
+    gap: 22px;
+    padding: 18px;
+    border-radius: 26px;
+    overflow: visible;
+  }
+
+  .course-promo-media {
+    width: 100%;
+    order: 0;
+  }
+
+  .course-promo-copy {
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+  }
+
+  .promo-poster-carousel {
+    width: 100%;
+    max-width: min(100%, 440px);
+    margin-inline: auto;
+    aspect-ratio: 3 / 4.15;
+    max-height: calc(100svh - 230px);
+    min-height: 0;
+    border-radius: 22px;
+  }
+
+  .promo-carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: rgba(0,0,0,.36);
+  }
+
+  .course-promo-copy .promo-title,
+  .course-promo-copy h2.promo-title {
+    display: grid;
+    gap: 6px;
+    font-size: clamp(36px, 11.5vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    margin-bottom: 14px;
+    max-width: 100%;
+  }
+
+  .course-promo-copy .promo-title span,
+  .course-promo-copy .promo-title small {
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  .course-promo-copy .promo-title small {
+    font-size: clamp(24px, 7.2vw, 34px);
+    letter-spacing: .08em;
+  }
+
+  .course-promo-copy h3 {
+    font-size: clamp(23px, 6.8vw, 32px);
+    line-height: 1.36;
+    letter-spacing: -.02em;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .promo-subtitle {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .promo-body {
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.88;
+    overflow: visible;
+  }
+
+  .promo-body p {
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .promo-highlights {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .promo-highlights li {
+    width: 100%;
+    min-height: auto;
+    padding: 12px 14px;
+  }
+
+  .promo-limited {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+/* Bottom CTA safety area for mobile browsers with lower overlays */
+@media (max-width: 640px) {
+  body {
+    padding-bottom: calc(118px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-dock {
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 80;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 9px;
+  }
+
+  .mobile-dock a {
+    min-height: 52px;
+    font-size: 15px;
+    border-radius: 16px;
+    white-space: nowrap;
+  }
+
+  .floating-ai {
+    display: none !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .wrap {
+    width: calc(100% - 24px);
+  }
+
+  .brand-title {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    gap: 24px;
+    font-size: 16px;
+  }
+
+  .hero-title {
+    font-size: clamp(32px, 9.6vw, 42px);
+  }
+
+  .section-title {
+    font-size: clamp(29px, 9vw, 40px);
+  }
+
+  .course-promo-card {
+    padding: 16px;
+  }
+
+  .course-promo-copy .promo-title,
+  .course-promo-copy h2.promo-title {
+    font-size: clamp(34px, 11vw, 46px);
+  }
+
+  .course-promo-copy h3 {
+    font-size: clamp(22px, 6.6vw, 28px);
+  }
+
+  .promo-body {
+    font-size: 15.5px;
+  }
+
+  .mobile-dock a {
+    font-size: 14px;
+  }
+}
