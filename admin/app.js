@@ -53,10 +53,10 @@ const promoFields = [
   ["ctaText", "報名按鈕文字", "text"],
   ["registerUrl", "報名連結", "text"],
   ["lineCtaText", "LINE 按鈕文字", "text"],
-  ["posterMain", "主海報路徑", "image"],
-  ["posterSecond", "第二張海報路徑", "image"],
-  ["posterThird", "第三張海報／影片封面路徑", "image"],
-  ["videoCover", "影片封面路徑", "image"],
+  ["posterMain", "輪播海報 1（主圖，可直接上傳抽換）", "image"],
+  ["posterSecond", "輪播海報 2（可直接上傳抽換）", "image"],
+  ["posterThird", "輪播海報 3（可直接上傳抽換）", "image"],
+  ["videoCover", "影片封面路徑（選填，不影響海報輪播）", "image"],
   ["videoOne", "影片一 MP4 路徑", "video"],
   ["videoOneTitle", "影片一標題", "text"],
   ["videoTwo", "影片二 MP4 路徑", "video"],
@@ -216,7 +216,7 @@ function renderSite(){
 function renderPromo(){
   const data = state.data.coursePromo || {};
   editor.innerHTML = `
-    <div class="notice">這裡管理「課程講座頁」最上方的新課程主推區。勾選「是否上架」才會在前台曝光；取消勾選即下架。改完按右上「發布本頁」。</div>
+    <div class="notice">這裡管理「課程講座頁」最上方的新課程主推區。輪播海報 1、2、3 都可在這裡上傳抽換；前台只會顯示一個主輪播，不會把海報排開展示。勾選「是否上架」才會在前台曝光；取消勾選即下架。改完按右上「發布本頁」。</div>
     <div class="grid">${promoFields.map(([k,l,t]) => field(k,l,t,data[k] ?? "", t==="textarea" ? "wide" : "")).join("")}</div>
   `;
 }

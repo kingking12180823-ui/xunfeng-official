@@ -120,6 +120,7 @@
     }
 
     section.hidden = false;
+    // posterMain / posterSecond / posterThird come from admin「新課程推廣」欄位。
     const posters = [data.posterMain, data.posterSecond, data.posterThird].filter(Boolean);
     const videos = [
       data.videoOne ? { title: data.videoOneTitle || "課程宣傳影片 1", src: data.videoOne } : null,
@@ -157,14 +158,7 @@
           ` : ""}
         </div>
       </article>
-
-      ${posters.length ? `
-        <div class="promo-gallery" aria-label="課程宣傳海報">
-          ${posters.map((p, i) => `<a href="${escapeHTML(p)}" target="_blank" rel="noreferrer"><img src="${escapeHTML(p)}" alt="掌中訣課程海報 ${i + 1}"></a>`).join("")}
-        </div>
-      ` : ""}
-
-      ${videos.length ? `
+${videos.length ? `
         <div class="promo-video-grid">
           ${videos.map(v => `
             <article class="promo-video-card">
@@ -406,4 +400,20 @@
   } else {
     setTimeout(enableCaseSwipe, 300);
   }
+})();
+
+
+// V4 force: remove legacy expanded course poster galleries after CMS render.
+(function(){
+  function removeLegacyCourseGallery(){
+    document.querySelectorAll('.course-promo-section .promo-gallery, .promo-gallery[aria-label*="課程"], .promo-gallery[aria-label*="掌中訣"]').forEach(function(el){
+      el.remove();
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(removeLegacyCourseGallery, 500); });
+  } else {
+    setTimeout(removeLegacyCourseGallery, 500);
+  }
+  setTimeout(removeLegacyCourseGallery, 1500);
 })();

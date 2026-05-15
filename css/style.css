@@ -943,3 +943,26 @@ h3 { font-size: 24px; }
     border-radius: 24px;
   }
 }
+
+
+/* === Course promo V3: only one managed poster carousel on frontend === */
+.course-promo-section .promo-gallery {
+  display: none !important;
+}
+.course-promo-section .course-promo-media {
+  align-self: center;
+}
+
+
+/* === V4 force: hide legacy expanded course posters === */
+.course-promo-section .promo-gallery,
+#zzjStaticFallback .promo-gallery,
+.promo-gallery[aria-label*="課程"],
+.promo-gallery[aria-label*="掌中訣"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

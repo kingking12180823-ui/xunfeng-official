@@ -6,6 +6,23 @@
   <title>課程講座｜巽風堪輿研究中心</title>
   <meta name="description" content="巽風堪輿研究中心提供風水、命理、場域管理與傳統智慧現代應用之課程講座。" />
   <link rel="stylesheet" href="css/style.css" />
+
+<style id="force-hide-course-promo-gallery">
+  /* V4 強制清除：課程新推廣區只保留主輪播，不顯示下方排開海報 */
+  .course-promo-section .promo-gallery,
+  #zzjStaticFallback .promo-gallery,
+  #cmsCoursePromo + .promo-gallery,
+  .promo-gallery[aria-label*="課程"],
+  .promo-gallery[aria-label*="掌中訣"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+</style>
+
 </head>
 <body>
 
@@ -38,6 +55,7 @@
 <main>
 
 
+<!-- V3: front-end only shows the controlled carousel; poster images are managed in admin/course_promo.json. -->
 <section id="zzjStaticFallback" class="course-promo-section">
   <div class="wrap">
     <article class="course-promo-card">
@@ -76,11 +94,6 @@
         </div>
       </div>
     </article>
-    <div class="promo-gallery" aria-label="掌中訣課程宣傳海報">
-      <a href="assets/courses/zhangzhongjue-poster-qr.png" target="_blank" rel="noreferrer"><img src="assets/courses/zhangzhongjue-poster-qr.png" alt="掌中訣課程海報 1"></a>
-      <a href="assets/courses/zhangzhongjue-poster-dark.png" target="_blank" rel="noreferrer"><img src="assets/courses/zhangzhongjue-poster-dark.png" alt="掌中訣課程海報 2"></a>
-      <a href="assets/courses/zhangzhongjue-video-cover.png" target="_blank" rel="noreferrer"><img src="assets/courses/zhangzhongjue-video-cover.png" alt="掌中訣課程海報 3"></a>
-    </div>
   </div>
 </section>
 
@@ -183,6 +196,25 @@
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
+})();
+</script>
+
+
+<script id="force-remove-course-promo-gallery">
+(function(){
+  function removePromoGallery(){
+    document.querySelectorAll('.course-promo-section .promo-gallery, .promo-gallery[aria-label*="課程"], .promo-gallery[aria-label*="掌中訣"]').forEach(function(el){
+      el.remove();
+    });
+  }
+  removePromoGallery();
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', removePromoGallery);
+  } else {
+    setTimeout(removePromoGallery, 100);
+  }
+  setTimeout(removePromoGallery, 600);
+  setTimeout(removePromoGallery, 1500);
 })();
 </script>
 
