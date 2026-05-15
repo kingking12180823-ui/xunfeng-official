@@ -87,6 +87,94 @@
     `).join("");
   }
 
+
+  function isPromoActive(data) {
+    if (!data) return false;
+    if (data.active === false || String(data.active).toLowerCase() === "false") return false;
+
+    const now = new Date();
+    if (data.publishStart) {
+      const start = new Date(data.publishStart + "T00:00:00");
+      if (!Number.isNaN(start.getTime()) && now < start) return false;
+    }
+    if (data.publishEnd) {
+      const end = new Date(data.publishEnd + "T23:59:59");
+      if (!Number.isNaN(end.getTime()) && now > end) return false;
+    }
+    return true;
+  }
+
+  function splitLines(text) {
+    return String(text || "").split(/\n+/).map(x => x.trim()).filter(Boolean);
+  }
+
+  function renderCoursePromo(data, site) {
+    const section = $("#coursePromoSection");
+    const target = $("#cmsCoursePromo");
+    if (!section || !target) return;
+
+    if (!isPromoActive(data)) {
+      section.hidden = true;
+      target.innerHTML = "";
+      return;
+    }
+
+    section.hidden = false;
+    const posters = [data.posterMain, data.posterSecond, data.posterThird].filter(Boolean);
+    const videos = [
+      data.videoOne ? { title: data.videoOneTitle || "課程宣傳影片 1", src: data.videoOne } : null,
+      data.videoTwo ? { title: data.videoTwoTitle || "課程宣傳影片 2", src: data.videoTwo } : null
+    ].filter(Boolean);
+
+    const body = splitLines(data.body).map(p => `<p>${escapeHTML(p)}</p>`).join("");
+    const highlights = splitLines(data.highlights).map(x => `<li>${escapeHTML(x)}</li>`).join("");
+    const lineUrl = site && site.lineUrl ? site.lineUrl : "https://lin.ee/W88wwDB";
+
+    target.innerHTML = `
+      <article class="course-promo-card">
+        <div class="course-promo-copy">
+          <div class="tag">${escapeHTML(data.label || "NEW COURSE")}</div>
+          <h2>${escapeHTML(data.title || "新課程招生")}</h2>
+          <h3>${escapeHTML(data.headline || "")}</h3>
+          ${data.subheadline ? `<p class="promo-subtitle">${escapeHTML(data.subheadline)}</p>` : ""}
+          <div class="promo-body">${body}</div>
+          ${highlights ? `<ul class="promo-highlights">${highlights}</ul>` : ""}
+          ${data.limitedText ? `<div class="promo-limited">⏳ ${escapeHTML(data.limitedText)}</div>` : ""}
+          <div class="actions">
+            ${data.registerUrl ? `<a class="btn btn-primary" href="${escapeHTML(data.registerUrl)}" target="_blank" rel="noreferrer">${escapeHTML(data.ctaText || "立即報名")}</a>` : ""}
+            <a class="btn btn-ghost" href="${escapeHTML(lineUrl)}" target="_blank" rel="noreferrer">${escapeHTML(data.lineCtaText || "LINE 詢問")}</a>
+          </div>
+          ${data.notice ? `<p class="promo-notice">${escapeHTML(data.notice)}</p>` : ""}
+        </div>
+
+        <div class="course-promo-media">
+          ${data.posterMain ? `<img class="promo-main-poster" src="${escapeHTML(data.posterMain)}" alt="${escapeHTML(data.title || "課程海報")}">` : ""}
+        </div>
+      </article>
+
+      ${posters.length ? `
+        <div class="promo-gallery" aria-label="課程宣傳海報">
+          ${posters.map((p, i) => `<a href="${escapeHTML(p)}" target="_blank" rel="noreferrer"><img src="${escapeHTML(p)}" alt="掌中訣課程海報 ${i + 1}"></a>`).join("")}
+        </div>
+      ` : ""}
+
+      ${videos.length ? `
+        <div class="promo-video-grid">
+          ${videos.map(v => `
+            <article class="promo-video-card">
+              <h3>${escapeHTML(v.title)}</h3>
+              <video controls playsinline preload="metadata" ${data.videoCover ? `poster="${escapeHTML(data.videoCover)}"` : ""}>
+                <source src="${escapeHTML(v.src)}" type="video/mp4">
+                你的瀏覽器不支援影片播放。
+              </video>
+            </article>
+          `).join("")}
+        </div>
+      ` : ""}
+    `;
+  }
+
+
   function renderCourses(data) {
     const target = $("#cmsCourses");
     if (!target || !data || !Array.isArray(data.courses)) return;
@@ -209,12 +297,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    const [site, services, cases, courses, photos] = await Promise.all([
+    const [site, services, cases, courses, photos, coursePromo] = await Promise.all([
       getJSON("content/site.json"),
       getJSON("content/services.json"),
       getJSON("content/cases.json"),
       getJSON("content/courses.json"),
-      getJSON("content/photos.json")
+      getJSON("content/photos.json"),
+      getJSON("content/course_promo.json")
     ]);
 
     if (site) {
@@ -234,6 +323,7 @@
       setSrc("[data-image='fengyi']", site.fengyiImage);
     }
 
+    renderCoursePromo(coursePromo, site);
     renderServices(services);
     renderCases(cases);
     renderCourses(courses);
@@ -243,4 +333,47 @@
     // 重新啟動照片輪播，等動態內容載入後再跑
     setTimeout(setupCarousel, 100);
   });
+})();
+
+
+// Case track mobile drag fallback: makes cases swipe reliably inside mobile browsers / Facebook in-app browser.
+(function () {
+  function enableCaseSwipe() {
+    const track = document.querySelector(".case-track");
+    if (!track || track.dataset.swipeReady === "1") return;
+    track.dataset.swipeReady = "1";
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    track.addEventListener("pointerdown", (e) => {
+      isDown = true;
+      startX = e.clientX;
+      scrollLeft = track.scrollLeft;
+      track.setPointerCapture?.(e.pointerId);
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      track.scrollLeft = scrollLeft - dx;
+    });
+
+    function end(e) {
+      if (!isDown) return;
+      isDown = false;
+      track.releasePointerCapture?.(e.pointerId);
+    }
+
+    track.addEventListener("pointerup", end);
+    track.addEventListener("pointercancel", end);
+    track.addEventListener("mouseleave", end);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(enableCaseSwipe, 300));
+  } else {
+    setTimeout(enableCaseSwipe, 300);
+  }
 })();

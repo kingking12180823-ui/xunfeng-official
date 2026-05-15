@@ -16,9 +16,9 @@
   "posterSecond": "assets/courses/zhangzhongjue-poster-dark.png",
   "posterThird": "assets/courses/zhangzhongjue-video-cover.png",
   "videoCover": "assets/courses/zhangzhongjue-video-cover.png",
-  "videoOne": "assets/courses/zhangzhongjue-video-1.mp4",
-  "videoOneTitle": "掌中訣課程宣傳影片 1",
-  "videoTwo": "assets/courses/zhangzhongjue-video-2.mp4",
-  "videoTwoTitle": "掌中訣課程宣傳影片 2",
-  "notice": "AI 或線上資訊僅作初步引導；正式學習與個案判斷，仍以風羿老師課堂教學與實務說明為準。"
+  "videoOne": "",
+  "videoOneTitle": "",
+  "videoTwo": "",
+  "videoTwoTitle": "",
+  "notice": "課程影片因檔案較大，建議先上傳至 YouTube、Google Drive 或 Facebook 後，再由後台貼入連結；正式學習與個案判斷，仍以風羿老師課堂教學與實務說明為準。"
 }
