@@ -100,7 +100,10 @@ const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 const statusEl = $("#status");
 const editor = $("#editor");
 
-function setStatus(msg){ statusEl.textContent = msg; }
+function setStatus(msg){
+  if(statusEl) statusEl.textContent = msg;
+  console.log("[Xunfeng Admin]", msg);
+}
 function repoParts(){
   const repo = $("#repo").value.trim();
   const [owner, name] = repo.split("/");
@@ -122,7 +125,13 @@ async function ghGet(path){
   const {owner, name} = repoParts();
   const branch = $("#branch").value.trim() || "main";
   const res = await fetch(`https://api.github.com/repos/${owner}/${name}/contents/${path}?ref=${encodeURIComponent(branch)}`, { headers: authHeaders() });
-  if(!res.ok) throw new Error(`讀取失敗 ${path}: ${res.status} ${await res.text()}`);
+  if(!res.ok){
+    const detail = await res.text();
+    if(res.status === 401) throw new Error(`讀取失敗 ${path}: 401。Token 無效或沒有貼完整，請重新產生並複製完整 github_pat_。`);
+    if(res.status === 403) throw new Error(`讀取失敗 ${path}: 403。Token 權限不足，請確認 Contents 是 Read and write，且授權 xunfeng-official。`);
+    if(res.status === 404) throw new Error(`讀取失敗 ${path}: 404。Repo、Branch 或檔案路徑錯誤，請確認 repo 是 kingking12180823-ui/xunfeng-official、branch 是 main。`);
+    throw new Error(`讀取失敗 ${path}: ${res.status} ${detail}`);
+  }
   return res.json();
 }
 async function ghPut(path, dataObj, message){
@@ -299,7 +308,16 @@ async function applyUploads(dataObj){
 
 async function loadAll(){
   try{
-    setStatus("讀取 GitHub content/*.json 中…");
+    setStatus("已按下連線，正在檢查 GitHub Repo、Branch 與 Token…");
+    const repoValue = $("#repo").value.trim();
+    if(repoValue !== "kingking12180823-ui/xunfeng-official"){
+      throw new Error("GitHub Repo 必須完整填：kingking12180823-ui/xunfeng-official，目前是：" + repoValue);
+    }
+    const tokenValue = $("#token").value.trim();
+    if(!tokenValue.startsWith("github_pat_")){
+      throw new Error("Token 格式不對，必須貼完整 github_pat_ 開頭的 Fine-grained token。");
+    }
+    setStatus("Repo 與 Token 格式通過，正在讀取 GitHub content/*.json…");
     state.repo = $("#repo").value.trim();
     state.branch = $("#branch").value.trim() || "main";
     state.token = $("#token").value.trim();
@@ -340,20 +358,40 @@ async function saveCurrent(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  window.__xunfengAdminReady = true;
+  const boot = document.getElementById("adminBootCheck");
+  if(boot) boot.style.display = "none";
+
   $("#repo").value = sessionStorage.getItem("xunfeng_repo") || $("#repo").value;
   $("#branch").value = sessionStorage.getItem("xunfeng_branch") || $("#branch").value;
   $("#token").value = sessionStorage.getItem("xunfeng_token") || "";
 
-  $("#connectBtn").onclick = loadAll;
-  $("#reloadBtn").onclick = loadAll;
-  $("#saveBtn").onclick = saveCurrent;
-  $("#forgetBtn").onclick = () => {
+  const connectBtn = $("#connectBtn");
+  const reloadBtn = $("#reloadBtn");
+  const saveBtn = $("#saveBtn");
+  const forgetBtn = $("#forgetBtn");
+
+  connectBtn.onclick = loadAll;
+  connectBtn.addEventListener("click", loadAll);
+  reloadBtn.onclick = loadAll;
+  saveBtn.onclick = saveCurrent;
+  forgetBtn.onclick = () => {
     sessionStorage.removeItem("xunfeng_token");
     $("#token").value = "";
-    setStatus("已清除本機 Token。");
+    setStatus("已清除本機 Token。請貼上新的 github_pat_ Token。");
   };
+
   $$(".tabs button").forEach(btn => btn.onclick = () => {
     state.tab = btn.dataset.tab;
     render();
   });
+
+  setStatus("後台程式已載入。請貼上 GitHub Token 後按「連線讀取內容」。");
+});
+
+window.addEventListener("error", function(e){
+  setStatus("後台程式錯誤：" + (e.message || "未知錯誤"));
+});
+window.addEventListener("unhandledrejection", function(e){
+  setStatus("後台連線錯誤：" + ((e.reason && e.reason.message) || e.reason || "未知錯誤"));
 });

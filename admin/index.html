@@ -57,6 +57,9 @@
         </div>
       </div>
 
+      <div id="adminBootCheck" class="notice" style="margin-bottom:16px; display:none;">
+          後台程式載入中；若此訊息未消失，請按 Ctrl + F5 強制刷新。
+        </div>
       <section id="editor" class="editor">
         <div class="empty">
           <h3>先連線 GitHub</h3>
@@ -73,6 +76,15 @@
     </label>
   </template>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=6"></script>
+<script id="admin-v6-boot-check">
+(function(){
+  var el = document.getElementById('adminBootCheck');
+  if(el) el.style.display = 'block';
+  setTimeout(function(){
+    if(window.__xunfengAdminReady && el) el.style.display = 'none';
+  }, 800);
+})();
+</script>
 </body>
 </html>
