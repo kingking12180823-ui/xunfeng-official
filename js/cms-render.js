@@ -134,7 +134,7 @@
       <article class="course-promo-card">
         <div class="course-promo-copy">
           <div class="tag">${escapeHTML(data.label || "NEW COURSE")}</div>
-          <h2>${escapeHTML(data.title || "新課程招生")}</h2>
+          <h2 class="promo-title"><span>${escapeHTML(data.title || "新課程")}</span>${data.titleSuffix ? `<small>${escapeHTML(data.titleSuffix)}</small>` : ""}</h2>
           <h3>${escapeHTML(data.headline || "")}</h3>
           ${data.subheadline ? `<p class="promo-subtitle">${escapeHTML(data.subheadline)}</p>` : ""}
           <div class="promo-body">${body}</div>
@@ -144,11 +144,17 @@
             ${data.registerUrl ? `<a class="btn btn-primary" href="${escapeHTML(data.registerUrl)}" target="_blank" rel="noreferrer">${escapeHTML(data.ctaText || "立即報名")}</a>` : ""}
             <a class="btn btn-ghost" href="${escapeHTML(lineUrl)}" target="_blank" rel="noreferrer">${escapeHTML(data.lineCtaText || "LINE 詢問")}</a>
           </div>
-          ${data.notice ? `<p class="promo-notice">${escapeHTML(data.notice)}</p>` : ""}
         </div>
 
         <div class="course-promo-media">
-          ${data.posterMain ? `<img class="promo-main-poster" src="${escapeHTML(data.posterMain)}" alt="${escapeHTML(data.title || "課程海報")}">` : ""}
+          ${posters.length ? `
+            <div class="promo-poster-carousel" data-course-promo-carousel>
+              ${posters.map((p, i) => `<img class="promo-carousel-img ${i === 0 ? "active" : ""}" src="${escapeHTML(p)}" alt="${escapeHTML(data.title || "課程海報")} ${i + 1}">`).join("")}
+              <div class="promo-carousel-dots">
+                ${posters.map((_, i) => `<button type="button" class="${i === 0 ? "active" : ""}" aria-label="切換到第 ${i + 1} 張海報"></button>`).join("")}
+              </div>
+            </div>
+          ` : ""}
         </div>
       </article>
 
@@ -172,6 +178,29 @@
         </div>
       ` : ""}
     `;
+  }
+
+
+
+  function initCoursePromoCarousels() {
+    $$("[data-course-promo-carousel]").forEach(carousel => {
+      if (carousel.dataset.ready === "1") return;
+      carousel.dataset.ready = "1";
+      const imgs = Array.from(carousel.querySelectorAll(".promo-carousel-img"));
+      const dots = Array.from(carousel.querySelectorAll(".promo-carousel-dots button"));
+      if (imgs.length <= 1) return;
+
+      let index = 0;
+      function show(next) {
+        index = (next + imgs.length) % imgs.length;
+        imgs.forEach((img, i) => img.classList.toggle("active", i === index));
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      }
+
+      dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
+
+      setInterval(() => show(index + 1), 5000);
+    });
   }
 
 
@@ -324,6 +353,7 @@
     }
 
     renderCoursePromo(coursePromo, site);
+    initCoursePromoCarousels();
     renderServices(services);
     renderCases(cases);
     renderCourses(courses);

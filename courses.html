@@ -43,7 +43,7 @@
     <article class="course-promo-card">
       <div class="course-promo-copy">
         <div class="tag">NEW COURSE｜掌訣班招生</div>
-        <h2>【掌中訣】開班授課</h2>
+        <h2 class="promo-title"><span>掌中訣</span><small>開班授課</small></h2>
         <h3>別讓命運成為盲盒，風羿老師帶你親手改寫人生劇本！</h3>
         <p class="promo-subtitle">解開命運密碼・掌握人生方向</p>
         <div class="promo-body">
@@ -64,7 +64,16 @@
         </div>
       </div>
       <div class="course-promo-media">
-        <img class="promo-main-poster" src="assets/courses/zhangzhongjue-poster-qr.png" alt="掌中訣課程招生海報">
+        <div class="promo-poster-carousel" data-course-promo-carousel>
+          <img class="promo-carousel-img active" src="assets/courses/zhangzhongjue-poster-qr.png" alt="掌中訣課程海報 1">
+          <img class="promo-carousel-img" src="assets/courses/zhangzhongjue-poster-dark.png" alt="掌中訣課程海報 2">
+          <img class="promo-carousel-img" src="assets/courses/zhangzhongjue-video-cover.png" alt="掌中訣課程海報 3">
+          <div class="promo-carousel-dots">
+            <button type="button" class="active" aria-label="切換到第 1 張海報"></button>
+            <button type="button" aria-label="切換到第 2 張海報"></button>
+            <button type="button" aria-label="切換到第 3 張海報"></button>
+          </div>
+        </div>
       </div>
     </article>
     <div class="promo-gallery" aria-label="掌中訣課程宣傳海報">
@@ -152,5 +161,30 @@
   }, 800);
 })();
 </script>
+
+<script>
+(function initStaticCoursePosterCarousel(){
+  function run(){
+    document.querySelectorAll('[data-course-promo-carousel]').forEach(function(carousel){
+      if(carousel.dataset.ready === '1') return;
+      carousel.dataset.ready = '1';
+      var imgs = Array.prototype.slice.call(carousel.querySelectorAll('.promo-carousel-img'));
+      var dots = Array.prototype.slice.call(carousel.querySelectorAll('.promo-carousel-dots button'));
+      if(imgs.length <= 1) return;
+      var index = 0;
+      function show(next){
+        index = (next + imgs.length) % imgs.length;
+        imgs.forEach(function(img, i){ img.classList.toggle('active', i === index); });
+        dots.forEach(function(dot, i){ dot.classList.toggle('active', i === index); });
+      }
+      dots.forEach(function(dot, i){ dot.addEventListener('click', function(){ show(i); }); });
+      setInterval(function(){ show(index + 1); }, 5000);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+
 </body>
 </html>

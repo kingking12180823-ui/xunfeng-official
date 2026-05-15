@@ -44,6 +44,7 @@ const promoFields = [
   ["publishEnd", "下架日期（可空白，例如 2026-06-30）", "text"],
   ["label", "小標籤", "text"],
   ["title", "課程主標", "text"],
+  ["titleSuffix", "課程標題副段（例如：開班授課）", "text"],
   ["headline", "主打標語", "textarea"],
   ["subheadline", "副標", "text"],
   ["body", "招生文案", "textarea"],
