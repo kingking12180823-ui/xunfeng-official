@@ -2,6 +2,7 @@ const files = {
   site: "content/site.json",
   services: "content/services.json",
   cases: "content/cases.json",
+  coursePromo: "content/course_promo.json",
   courses: "content/courses.json",
   photos: "content/photos.json",
 };
@@ -10,6 +11,7 @@ const labels = {
   site: "網站設定",
   services: "服務價格",
   cases: "案例實績",
+  coursePromo: "新課程推廣",
   courses: "課程講座",
   photos: "照片輪播",
 };
@@ -33,6 +35,32 @@ const siteFields = [
   ["seoTitle", "SEO 標題", "text"],
   ["seoDescription", "SEO 描述", "textarea"],
   ["seoKeywords", "SEO 關鍵字", "textarea"],
+];
+
+
+const promoFields = [
+  ["active", "是否上架：勾選＝上架；取消＝下架", "checkbox"],
+  ["publishStart", "上架開始日（可空白，例如 2026-06-01）", "text"],
+  ["publishEnd", "下架日期（可空白，例如 2026-06-30）", "text"],
+  ["label", "小標籤", "text"],
+  ["title", "課程主標", "text"],
+  ["headline", "主打標語", "textarea"],
+  ["subheadline", "副標", "text"],
+  ["body", "招生文案", "textarea"],
+  ["highlights", "課程亮點（一行一項）", "textarea"],
+  ["limitedText", "名額提示", "text"],
+  ["ctaText", "報名按鈕文字", "text"],
+  ["registerUrl", "報名連結", "text"],
+  ["lineCtaText", "LINE 按鈕文字", "text"],
+  ["posterMain", "主海報路徑", "image"],
+  ["posterSecond", "第二張海報路徑", "image"],
+  ["posterThird", "第三張海報／影片封面路徑", "image"],
+  ["videoCover", "影片封面路徑", "image"],
+  ["videoOne", "影片一 MP4 路徑", "video"],
+  ["videoOneTitle", "影片一標題", "text"],
+  ["videoTwo", "影片二 MP4 路徑", "video"],
+  ["videoTwoTitle", "影片二標題", "text"],
+  ["notice", "底部提醒文字", "textarea"],
 ];
 
 const listFields = {
@@ -127,7 +155,7 @@ async function uploadFile(file){
     reader.readAsDataURL(file);
   });
   const body = {
-    message: `Upload image ${cleanName}`,
+    message: `Upload media ${cleanName}`
     content: b64,
     branch
   };
@@ -136,19 +164,31 @@ async function uploadFile(file){
     headers: {...authHeaders(), "Content-Type": "application/json"},
     body: JSON.stringify(body)
   });
-  if(!res.ok) throw new Error(`圖片上傳失敗: ${res.status} ${await res.text()}`);
+  if(!res.ok) throw new Error(`媒體上傳失敗: ${res.status} ${await res.text()}`);
   await res.json();
   return path;
 }
 
 function field(name, label, type, value="", cls=""){
   const id = `${state.tab}-${name}-${Math.random().toString(36).slice(2)}`;
+
+  if(type === "checkbox"){
+    const checked = value === true || String(value).toLowerCase() === "true" ? "checked" : "";
+    return `<label class="field checkbox-field ${cls}"><span>${label}</span><input id="${id}" type="checkbox" data-name="${name}" ${checked} /><p class="small">勾選代表前台上架；取消勾選代表前台隱藏。</p></label>`;
+  }
+
   const input = type === "textarea"
     ? `<textarea id="${id}" data-name="${name}">${escapeHtml(value)}</textarea>`
     : `<input id="${id}" data-name="${name}" value="${escapeAttr(value)}" />`;
-  const img = type === "image" && value ? `<img class="preview-img" src="../${escapeAttr(value)}" onerror="this.style.display='none'">` : "";
-  const upload = type === "image" ? `<input type="file" data-upload-for="${id}" accept="image/*"><p class="small">可貼圖片路徑，或選擇圖片後發布時自動上傳。</p>` : "";
-  return `<label class="field ${cls}"><span>${label}</span>${input}${upload}${img}</label>`;
+
+  const isImage = type === "image";
+  const isVideo = type === "video";
+  const img = isImage && value ? `<img class="preview-img" src="../${escapeAttr(value)}" onerror="this.style.display='none'">` : "";
+  const video = isVideo && value ? `<video class="preview-video" controls src="../${escapeAttr(value)}"></video>` : "";
+  const upload = (isImage || isVideo)
+    ? `<input type="file" data-upload-for="${id}" accept="${isVideo ? "video/*" : "image/*"}"><p class="small">可貼檔案路徑，或選擇檔案後發布時自動上傳。</p>`
+    : "";
+  return `<label class="field ${cls}"><span>${label}</span>${input}${upload}${img}${video}</label>`;
 }
 function escapeHtml(s){return String(s??"").replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
 function escapeAttr(s){return escapeHtml(s).replace(/"/g, "&quot;");}
@@ -161,6 +201,7 @@ function render(){
     return;
   }
   if(state.tab === "site") renderSite();
+  else if(state.tab === "coursePromo") renderPromo();
   else renderList(state.tab);
 }
 function renderSite(){
@@ -170,6 +211,15 @@ function renderSite(){
     <div class="grid">${siteFields.map(([k,l,t]) => field(k,l,t,data[k]||"", t==="textarea" ? "wide" : "")).join("")}</div>
   `;
 }
+
+function renderPromo(){
+  const data = state.data.coursePromo || {};
+  editor.innerHTML = `
+    <div class="notice">這裡管理「課程講座頁」最上方的新課程主推區。勾選「是否上架」才會在前台曝光；取消勾選即下架。改完按右上「發布本頁」。</div>
+    <div class="grid">${promoFields.map(([k,l,t]) => field(k,l,t,data[k] ?? "", t==="textarea" ? "wide" : "")).join("")}</div>
+  `;
+}
+
 function renderList(tab){
   const key = listKeys[tab];
   const arr = state.data[tab][key] || [];
@@ -212,9 +262,11 @@ function renderItem(tab, item, i, fields){
 }
 
 function collect(){
-  if(state.tab === "site"){
-    const obj = {...state.data.site};
-    $$("[data-name]").forEach(el => obj[el.dataset.name] = el.value);
+  if(state.tab === "site" || state.tab === "coursePromo"){
+    const obj = {...state.data[state.tab]};
+    $$("[data-name]").forEach(el => {
+      obj[el.dataset.name] = el.type === "checkbox" ? el.checked : el.value;
+    });
     return obj;
   }
   const key = listKeys[state.tab];
@@ -224,7 +276,7 @@ function collect(){
     const item = {};
     fields.forEach(k => {
       const el = $(`[data-name="${k}"]`, itemEl);
-      item[k] = el ? el.value : "";
+      item[k] = el ? (el.type === "checkbox" ? el.checked : el.value) : "";
     });
     return item;
   });
