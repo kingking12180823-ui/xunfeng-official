@@ -29,6 +29,14 @@
     $$(selector).forEach(el => el.src = value);
   }
 
+  function getSafeAiUrl(value) {
+    // 舊 GPT 目前公開端會 404，因此先導到站內 AI 說明頁。
+    // 未來後台換成新的可公開 GPT 連結後，會自動改用新連結。
+    const blocked = "g-683d6cacf5648191ade78d93c3aec7ac";
+    if (!value || String(value).includes(blocked)) return "ai.html";
+    return value;
+  }
+
   function escapeHTML(str) {
     return String(str || "").replace(/[&<>"']/g, s => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
@@ -220,7 +228,7 @@
       setText("[data-site='email']", site.email);
       setHref("[data-link='line']", site.lineUrl);
       setHref("[data-link='facebook']", site.facebookUrl);
-      setHref("[data-link='ai']", site.aiUrl);
+      setHref("[data-link='ai']", getSafeAiUrl(site.aiUrl));
       setHref("[data-link='email']", site.email ? "mailto:" + site.email : "");
       setSrc("[data-image='brandAnchor']", site.brandAnchorImage);
       setSrc("[data-image='fengyi']", site.fengyiImage);
@@ -235,50 +243,4 @@
     // 重新啟動照片輪播，等動態內容載入後再跑
     setTimeout(setupCarousel, 100);
   });
-})();
-
-
-// Case track mobile drag fallback: makes cases swipe reliably inside mobile browsers / Facebook in-app browser.
-(function () {
-  function enableCaseSwipe() {
-    const track = document.querySelector(".case-track");
-    if (!track || track.dataset.swipeReady === "1") return;
-    track.dataset.swipeReady = "1";
-
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    let moved = false;
-
-    track.addEventListener("pointerdown", (e) => {
-      isDown = true;
-      moved = false;
-      startX = e.clientX;
-      scrollLeft = track.scrollLeft;
-      track.setPointerCapture?.(e.pointerId);
-    });
-
-    track.addEventListener("pointermove", (e) => {
-      if (!isDown) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 4) moved = true;
-      track.scrollLeft = scrollLeft - dx;
-    });
-
-    function end(e) {
-      if (!isDown) return;
-      isDown = false;
-      track.releasePointerCapture?.(e.pointerId);
-    }
-
-    track.addEventListener("pointerup", end);
-    track.addEventListener("pointercancel", end);
-    track.addEventListener("mouseleave", end);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => setTimeout(enableCaseSwipe, 300));
-  } else {
-    setTimeout(enableCaseSwipe, 300);
-  }
 })();
