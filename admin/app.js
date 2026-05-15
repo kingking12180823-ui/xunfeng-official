@@ -165,7 +165,7 @@ async function uploadFile(file){
     reader.readAsDataURL(file);
   });
   const body = {
-    message: `Upload media ${cleanName}`
+    message: `Upload media ${cleanName}`,
     content: b64,
     branch
   };
@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  setStatus("後台程式已載入。請貼上 GitHub Token 後按「連線讀取內容」。");
+  setStatus("V7 後台程式已載入。請貼上 GitHub Token 後按「連線讀取內容」。");
 });
 
 window.addEventListener("error", function(e){
