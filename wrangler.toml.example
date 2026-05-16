@@ -1,0 +1,19 @@
+name = "xunfeng-ai-member"
+main = "workers/xunfeng-ai-member-worker.js"
+compatibility_date = "2026-05-16"
+
+# 改成你的正式網站網址
+[vars]
+ALLOWED_ORIGIN = "https://xunfeng-official-cms.pages.dev"
+OPENAI_MODEL = "gpt-4.1-mini"
+
+# 建立 D1 後，把 database_id 換成 Cloudflare 給你的 ID
+[[d1_databases]]
+binding = "DB"
+database_name = "xunfeng_ai_member"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# 以下三個不要寫在 toml 裡，要用 Cloudflare Dashboard 或 wrangler secret 設定：
+# OPENAI_API_KEY
+# JWT_SECRET
+# ADMIN_KEY
